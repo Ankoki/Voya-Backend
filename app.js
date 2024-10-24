@@ -51,6 +51,7 @@ app.get('/is-available', async (req, res) => {
         const users = await collection.find({'username': req.body.username}).toArray();
         const available = users.length === 0;
         console.log('Username ' + req.body.username + ' is ' + (available ? 'available ' : 'taken ') + '.');
+        res.status(200).json( { available: available } );
     } catch (error) {
         console.error('Error checking availability:', error);
         res.status(500).send('Internal Server Error [' + error.code + ']')
