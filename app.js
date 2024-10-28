@@ -69,9 +69,11 @@ app.get('/fetch-userdata', async (req, res) => {
         await client.connect();
         const database = client.db('voyadb');
         const collection = database.collection('userdata');
-        const users = await collection.find({}).toArray();
-        console.log('Fetched userdata:', users);
-        res.status(200).json(users);
+        const uuid = req.body.uuid;
+        const filter = { uuid: uuid };
+        const user = await collection.find(filter).toArray();
+        console.log('Fetched userdata for ' + uuid + ':', user);
+        res.status(200).json(user);
     } catch (error) {
         console.error('Error fetching userdata:', error);
         res.status(500).send('Internal Server Error [' + error.code + ']');
