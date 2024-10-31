@@ -166,6 +166,55 @@ app.post('/push-bookdata', async (req, res) => {
     }
 });
 
+// UUID Username Bridge
+
+app.get('/get-username-from-uuid', async (req, res) => {
+    if (!validateHeader(req, res))
+        return;
+    const client = new MongoClient(mongoUrl);
+    try {
+        await client.connect();
+        const database = client.db('voyadb');
+        const collection = database.collection('uuidmap');
+        const uuid = req.body.uuid;
+        const username = await collection.find({ uuid }).toArray();
+        console.log('Fetched username[' + username + '] for UUID[' + uuid + ']');
+        res.status(200).json({ username: username });
+    } catch (error) {
+        console.error('Error fetching username:', error);
+        res.status(500).send('Internal Sever Error [' + error.code + ']');
+    } finally {
+        await client.close();
+    }
+});
+
+app.post('/update-uuid-username', async (req, res) => {
+    if (!validateHeader(req, res))
+        return;
+    const client = new MongoClient(mongoUrl);
+    try {
+        await client.connect();
+        const database = client.db('voyadb');
+        const collection = database.collection('uuidmap');
+        const uuid = req.body.uuid;
+        const username = req.body.username;
+        const filter = {
+            updateOne: {
+                filter: { uuid },
+                update: { $set: uuid, username }
+            }
+        }
+        const result = await collection.updateOne(filter, { upsert: true });
+        console.log('Updated Username[' + username + '] for UUID[' + uuid + ']');
+        res.status(200).json({ message: 'Username updated successfully.', result});
+    } catch (error) {
+        console.error('Error updating username:', error);
+        res.status(500).send('Internal Sever Error [' + error.code + ']');
+    } finally {
+        await client.close();
+    }
+});
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404));
