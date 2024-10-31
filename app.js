@@ -178,7 +178,7 @@ app.get('/get-uuid-from-username', async (req, res) => {
         const username = req.body.username;
         const uuid = await collection.find({ username }).toArray();
         console.log('Fetched UUID[' + uuid + '] for username[' + username + ']');
-        res.status(200).json({ username: username });
+        res.status(200).json({ uuid: uuid });
     } catch (error) {
         console.error('Error fetching UUID:', error);
         res.status(500).send('Internal Sever Error [' + error.code + ']');
