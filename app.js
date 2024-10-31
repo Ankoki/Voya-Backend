@@ -167,8 +167,7 @@ app.post('/push-bookdata', async (req, res) => {
 });
 
 // UUID Username Bridge
-
-app.get('/get-username-from-uuid', async (req, res) => {
+app.get('/get-uuid-from-username', async (req, res) => {
     if (!validateHeader(req, res))
         return;
     const client = new MongoClient(mongoUrl);
@@ -176,12 +175,12 @@ app.get('/get-username-from-uuid', async (req, res) => {
         await client.connect();
         const database = client.db('voyadb');
         const collection = database.collection('uuidmap');
-        const uuid = req.body.uuid;
-        const username = await collection.find({ uuid }).toArray();
-        console.log('Fetched username[' + username + '] for UUID[' + uuid + ']');
+        const username = req.body.username;
+        const uuid = await collection.find({ username }).toArray();
+        console.log('Fetched UUID[' + uuid + '] for username[' + username + ']');
         res.status(200).json({ username: username });
     } catch (error) {
-        console.error('Error fetching username:', error);
+        console.error('Error fetching UUID:', error);
         res.status(500).send('Internal Sever Error [' + error.code + ']');
     } finally {
         await client.close();
@@ -196,12 +195,12 @@ app.post('/update-uuid-username', async (req, res) => {
         await client.connect();
         const database = client.db('voyadb');
         const collection = database.collection('uuidmap');
-        const uuid = req.body.uuid;
         const username = req.body.username;
+        const uuid = req.body.uuid;
         const filter = {
             updateOne: {
-                filter: { uuid },
-                update: { $set: uuid, username }
+                filter: { username },
+                update: { $set: username, uuid }
             }
         }
         const result = await collection.updateOne(filter, { upsert: true });
