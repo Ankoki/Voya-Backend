@@ -45,6 +45,7 @@ app.get('/is-available', async (req, res) => {
         return;
     const client = new MongoClient(mongoUrl);
     try {
+        console.log(req.body);
         await client.connect();
         const database = client.db('voyadb');
         const collection = database.collection('userdata');
