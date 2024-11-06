@@ -54,7 +54,7 @@ app.get('/is-available', async (req, res) => {
         res.status(200).json( { available: available } );
     } catch (error) {
         console.error('Error checking availability:', error);
-        res.status(500).send('Internal Server Error [' + error.code + ']')
+        res.status(500).json({ error_code: 500, error: error });
     } finally {
         await client.close();
     }
@@ -76,7 +76,7 @@ app.get('/fetch-userdata', async (req, res) => {
         res.status(200).json(user);
     } catch (error) {
         console.error('Error fetching userdata:', error);
-        res.status(500).send('Internal Server Error [' + error.code + ']');
+        res.status(500).json({ error_code: 500, error: error });
     } finally {
         await client.close();
     }
@@ -95,7 +95,7 @@ app.post('/push-userdata', async (req, res) => {
         res.status(200).send(result);
     } catch (error) {
         console.error('Error pushing userdata:', error);
-        res.status(500).send('Internal Server Error [' + error.code + ']');
+        res.status(500).json({ error_code: 500, error: error });
     } finally {
         await client.close();
     }
@@ -115,7 +115,7 @@ app.get('/fetch-bookdata', async (req, res) => {
         res.status(200).json(userdata);
     } catch (error) {
         console.error('Error fetching bookdata:', error);
-        res.status(500).send('Internal Server Error [' + error.code + ']');
+        res.status(500).json({ error_code: 500, error: error });
     } finally {
         await client.close();
     }
@@ -141,7 +141,7 @@ app.get('/fetch-user-bookdata', async (req, res) => {
         res.status(200).json(userdata);
     } catch (error) {
         console.error('Error fetching bookdata:', error);
-        res.status(500).send('Internal Server Error [' + error.code + "]");
+        res.status(500).json({ error_code: 500, error: error });
     } finally {
         await client.close();
     }
@@ -160,7 +160,7 @@ app.post('/push-bookdata', async (req, res) => {
         res.status(200).send(result);
     } catch (error) {
         console.error('Error pushing bookdata:', error);
-        res.status(500).send('Internal Server Error [' + error.code + ']');
+        res.status(500).json({ error_code: 500, error: error });
     } finally {
         await client.close();
     }
@@ -181,7 +181,7 @@ app.get('/get-uuid-from-username', async (req, res) => {
         res.status(200).json({ uuid: uuid });
     } catch (error) {
         console.error('Error fetching UUID:', error);
-        res.status(500).send('Internal Sever Error [' + error.code + ']');
+        res.status(500).json({ error_code: 500, error: error });
     } finally {
         await client.close();
     }
@@ -208,7 +208,7 @@ app.post('/update-uuid-username', async (req, res) => {
         res.status(200).json({ message: 'Username updated successfully.', result});
     } catch (error) {
         console.error('Error updating username:', error);
-        res.status(500).send('Internal Sever Error [' + error.code + ']');
+        res.status(500).json({ error_code: 500, error: error });
     } finally {
         await client.close();
     }
