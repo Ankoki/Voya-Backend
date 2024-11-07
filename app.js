@@ -45,13 +45,12 @@ app.get('/is-available', async (req, res) => {
         return;
     const client = new MongoClient(mongoUrl);
     try {
-        console.log(req.body);
         await client.connect();
         const database = client.db('voyadb');
         const collection = database.collection('userdata');
-        const users = await collection.find({'username': req.body.username}).toArray();
+        const users = await collection.find({'username': req.headers.username}).toArray();
         const available = users.length === 0;
-        console.log('Username ' + req.body.username + ' is ' + (available ? 'available ' : 'taken ') + '.');
+        console.log('Username ' + req.headers.username + ' is ' + (available ? 'available ' : 'taken ') + '.');
         res.status(200).json( { available: available } );
     } catch (error) {
         console.error('Error checking availability:', error);
