@@ -92,7 +92,7 @@ app.post('/push-userdata', async (req, res) => {
         const collection = database.collection('userdata');
         const key = Object.keys(req.body)[0];
         let result = await collection.replaceOne({"username": key}, req.body[key], {upsert: true});
-        res.status(200).send(result);
+        res.status(200).json({ response: result });
     } catch (error) {
         console.error('Error pushing userdata:', error);
         res.status(500).json({ error_code: 500, error: error });
