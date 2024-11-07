@@ -69,7 +69,7 @@ app.get('/fetch-userdata', async (req, res) => {
         await client.connect();
         const database = client.db('voyadb');
         const collection = database.collection('userdata');
-        const uuid = req.body.uuid;
+        const uuid = req.headers.uuid;
         const filter = { uuid: uuid };
         const user = await collection.find(filter).toArray();
         console.log('Fetched userdata for ' + uuid + ':', user);
@@ -129,7 +129,7 @@ app.get('/fetch-user-bookdata', async (req, res) => {
         await client.connect();
         const database = client.db('voyadb');
         const collection = database.collection('bookdata');
-        const user = req.body.user;
+        const user = req.headers.user;
         const filter = {
             $or: [
                 {admins: user},
@@ -175,7 +175,7 @@ app.get('/get-uuid-from-username', async (req, res) => {
         await client.connect();
         const database = client.db('voyadb');
         const collection = database.collection('uuidmap');
-        const username = req.body.username;
+        const username = req.headers.username;
         const uuid = await collection.find({ username }).toArray();
         console.log('Fetched UUID[' + uuid + '] for username[' + username + ']');
         res.status(200).json({ uuid: uuid });
