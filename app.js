@@ -91,7 +91,7 @@ app.post('/push-userdata', async (req, res) => {
         const database = client.db('voyadb');
         const collection = database.collection('userdata');
         const key = Object.keys(req.body)[0];
-        let result = await collection.replaceOne({"username": key}, req.body[key], {upsert: true});
+        let result = await collection.replaceOne({'username': key}, req.body[key], {upsert: true});
         res.status(200).json({ response: result });
     } catch (error) {
         console.error('Error pushing userdata:', error);
@@ -195,12 +195,8 @@ app.post('/update-uuid-username', async (req, res) => {
         await client.connect();
         const database = client.db('voyadb');
         const collection = database.collection('uuidmap');
-        const username = req.body.username;
-        const uuid = req.body.uuid;
-        console.debug('[' + username + ']username and [' + uuid + ']uuid');
-        const result = await collection.replaceOne({ username }, uuid, { upsert: true });
-        console.debug('[' + result + ']result of the replacement');
-        console.log('Updated Username[' + username + '] for UUID[' + uuid + ']');
+        const key = Object.keys(req.body)[0];
+        let result = await collection.replaceOne({'username': key}, req.body[key], {upsert: true});
         res.status(200).json({ message: 'Username updated successfully.', result});
     } catch (error) {
         console.error('Error updating username:', error);
