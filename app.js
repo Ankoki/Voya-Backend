@@ -197,13 +197,7 @@ app.post('/update-uuid-username', async (req, res) => {
         const collection = database.collection('uuidmap');
         const username = req.body.username;
         const uuid = req.body.uuid;
-        const filter = {
-            updateOne: {
-                filter: { username },
-                update: { $set: username, uuid }
-            }
-        }
-        const result = await collection.updateOne(filter, { upsert: true });
+        const result = await collection.replaceOne({ username }, uuid, { upsert: true });
         console.log('Updated Username[' + username + '] for UUID[' + uuid + ']');
         res.status(200).json({ message: 'Username updated successfully.', result});
     } catch (error) {
