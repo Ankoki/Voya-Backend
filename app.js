@@ -176,9 +176,10 @@ app.get('/get-uuid-from-username', async (req, res) => {
         const database = client.db('voyadb');
         const collection = database.collection('uuidmap');
         const username = req.headers.username;
-        const uuid = await collection.find({ username }).toArray();
-        console.log('Fetched UUID[' + uuid + '] for username[' + username + ']');
-        res.status(200).json({ uuid: uuid });
+        console.log(username);
+        const uuid = await collection.findOne({ key: username });
+        console.log('Fetched UUID[' + uuid[username] + '] for username[' + username + ']');
+        res.status(200).json({ uuid: uuid[username] });
     } catch (error) {
         console.error('Error fetching UUID:', error);
         res.status(500).json({ error_code: 500, error: error });
