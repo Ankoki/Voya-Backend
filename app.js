@@ -192,21 +192,15 @@ app.post('/update-uuid-username', async (req, res) => {
         return;
     const client = new MongoClient(mongoUrl);
     try {
-        console.log('test -0.5')
         await client.connect();
-        console.log('test 0')
         const database = client.db('voyadb');
-        console.log('test 0.5')
         const collection = database.collection('uuidmap');
-        console.log('test 1');
         const key = Object.keys(req.body)[0];
-        console.log('test 2[key=' + key + ']');
-        let result = await collection.replaceOne({'username': key}, req.body[key], {upsert: true});
-        console.log('test 3[result=' + result + ']');
+        let json = new Map();
+        json.set(key, req.body[key]);
+        let result = await collection.findOneAndUpdate({ key }, {$set: json}, { upsert: true });
         res.status(200).json({ message: 'Username updated successfully.', result});
     } catch (error) {
-        console.log('test 4[error=' + error + ']');
-        console.error('Error updating username:', error);
         res.status(500).json({ error_code: 500, error: error });
     } finally {
         await client.close();
