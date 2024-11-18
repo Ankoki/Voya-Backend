@@ -110,9 +110,11 @@ app.get('/fetch-bookdata', async (req, res) => {
         await client.connect();
         const database = client.db('voyadb');
         const collection = database.collection('bookdata');
-        const userdata = await collection.find({}).toArray();
-        console.log('Fetched bookdata:', userdata);
-        res.status(200).json(userdata);
+        const uuid = req.headers.uuid;
+        const filter = { uuid: uuid };
+        const bookdata = await collection.find(filter).toArray();
+        console.log('Fetched bookdata:', bookdata);
+        res.status(200).json(bookdata);
     } catch (error) {
         console.error('Error fetching bookdata:', error);
         res.status(500).json({ error_code: 500, error: error });
